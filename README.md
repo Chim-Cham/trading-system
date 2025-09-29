@@ -1,6 +1,6 @@
 # trading-system
 
-## Info
+### Info
 Assignment to write a smaller program that contains the following:
 - A user needs to be able to register an account
 - A user needs to be able to log out.
