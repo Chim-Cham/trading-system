@@ -12,3 +12,6 @@ Assignment to write a smaller program that contains the following:
 - A user needs to be able to accept a trade request.
 - A user needs to be able to deny a trade request.
 - A user needs to be able to browse completed requests.
+
+## User Manual
+This program is a "trading simulator" that allows a user to create an account, add items, make request and accept trades. All via terminal inputs. 
