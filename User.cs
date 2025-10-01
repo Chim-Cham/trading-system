@@ -12,12 +12,12 @@ public class User
     // User Email
     public string Email;
     //UserID
-    public string ID;
+    public int ID;
     //User Password
     public string Pwd;
 
     // Method for when creating new user
-    public User(string name, string email, string id, string pwd)
+    public User(string name, string email, int id, string pwd)
     {
         Name = name;
         Email = email;
@@ -27,7 +27,7 @@ public class User
 
     // Method for logging in, when used will check if the given inputs (username and password) is equal to the Name and Pwd. 
     // If it is the method will return true and allow the login if not it will return false.
-    public bool Login(string username, string password)
+    public bool Login(string? username, string? password)
     {
         return username == Name && password == Pwd;
     }

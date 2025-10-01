@@ -1,0 +1,6 @@
+Shoes : Pair of older shoes, still in good condition : 1 : 1
+T-shirt : T-shirt with a jigsaw pattern : 2 : 1
+Video Game : An old SNES cartridge : 3 : 2
+Lamp : Table lamp, cable missing : 4 : 2
+Gloves : Gardener gloves, bit dirty but still usable : 5 : 3
+Sunglasses : Aviator shades, one of the lenses has a small scratch otherwise brand new : 6 : 3
