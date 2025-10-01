@@ -148,8 +148,8 @@ while (running)
         Console.Clear();
     }
 
-    // Once logged in the remaining code is the actual interactive part that users will navigate to list items, trade and register articles they want to
-    // use for said trading.
+    // Once logged in the remaining code is the actual interactive part that users will navigate to list items, trade and register articles 
+    // they want to use for said trading.
     else
     {
         // User interface that displays once logged in.

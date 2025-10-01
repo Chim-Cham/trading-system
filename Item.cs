@@ -9,6 +9,7 @@ public class Item
     // Item Owner ID
     public int OwnerID;
 
+    // Method for creating new Item
     public Item(string name, string desc, int ownerid)
     {
         Name = name;
@@ -23,10 +24,5 @@ public class Item
         System.Console.WriteLine($" Description: {Desc}");
         System.Console.WriteLine($" OwnerID: {OwnerID}");
         System.Console.ReadLine();
-    }
-
-    public void GetStatus()
-    {
-        return;
     }
 }
