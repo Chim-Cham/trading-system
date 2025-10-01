@@ -1,0 +1,3 @@
+Erik : erik@hotmail.com : 1 : 1234
+Carl : carl@hotmail.com : 2 : 5678
+Gustav : gustav@hotmail : 3 : 9123
