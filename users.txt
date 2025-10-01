@@ -2,3 +2,7 @@ Admin : admin@hotmail : 0 : admin
 Erik : erik@hotmail.com : 1 : 1234
 Carl : carl@hotmail.com : 2 : 5678
 Gustav : gustav@hotmail.com : 3 : 9123
+Hans : hans@hotmail.com : 4 : 3939
+Kajsa : kajsa@hotmail.com : 5 : 1211
+Kaj : kaj@hotmail.com : 6 : 1001
+Eva : Eva@hotmail.com : 7 : 1231

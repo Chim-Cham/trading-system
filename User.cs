@@ -8,16 +8,16 @@ namespace Apps;
 public class User
 {
     // Username
-    public string Name;
+    public string? Name;
     // User Email
-    public string Email;
+    public string? Email;
     //UserID
-    public int ID;
+    public int? ID;
     //User Password
-    public string Pwd;
+    public string? Pwd;
 
     // Method for when creating new user
-    public User(string name, string email, int id, string pwd)
+    public User(string? name, string? email, int id, string? pwd)
     {
         Name = name;
         Email = email;

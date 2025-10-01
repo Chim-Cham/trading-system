@@ -6,15 +6,13 @@ public class Item
     public string? Name;
     // Item Description
     public string? Desc;
-    public int ItemID;
     // Item Owner ID
     public int OwnerID;
 
-    public Item(string name, string desc, int itemid, int ownerid)
+    public Item(string name, string desc, int ownerid)
     {
         Name = name;
         Desc = desc;
-        ItemID = itemid;
         OwnerID = ownerid;
     }
 
@@ -23,7 +21,6 @@ public class Item
     {
         Console.WriteLine($"Item: {Name}");
         System.Console.WriteLine($" Description: {Desc}");
-        System.Console.WriteLine($" ItemID: {ItemID}");
         System.Console.WriteLine($" OwnerID: {OwnerID}");
         System.Console.ReadLine();
     }
@@ -31,14 +28,5 @@ public class Item
     public void GetStatus()
     {
         return;
-    }
-
-    // enum used to track the status of items
-    enum Status
-    {
-        None,
-        Stored,
-        Tradable,
-        Pending,
     }
 }
