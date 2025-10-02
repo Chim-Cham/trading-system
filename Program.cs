@@ -11,8 +11,10 @@ List<User> users = new List<User>();
 // The below code snippet is used to import all user info from a txt file. ReadALLLines goes through the textfile and stores each lines read in a 
 // string array that later on gets converted to list items stored in List<User>.
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-string[] importUsers = File.ReadAllLines("users.txt");
-string[] importItems = File.ReadAllLines("items.txt");
+string usersFile = "users.txt";
+string itemsFile = "items.txt";
+string[] importUsers = File.ReadAllLines(usersFile);
+string[] importItems = File.ReadAllLines(itemsFile);
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Dictionary used to match items to their owners during item listings, the function takes the UserID as the int input and in return gives any 
@@ -41,6 +43,7 @@ for (int i = 0; i < importUsers.Length; i++)
     }
     else
     {
+        // .Split was not something we convered in lectures, usage of .Split was allowed by Max Ekstedt.
         string[] values = importUsers[i].Split(" : ");
         int.TryParse(values[2], out int ID);
         users.Add(new User(values[0], values[1], ID, values[3]));
@@ -131,7 +134,7 @@ while (running)
                 //---------------------------------------------------------------------------------------------------------------------------------
                 string inputCompile = $"\n{userInput} : {emailInput} : {users.Count - 1} : {passInput}";
                 //---------------------------------------------------------------------------------------------------------------------------------
-                File.AppendAllText("users.txt", inputCompile);
+                File.AppendAllText(usersFile, inputCompile);
                 break;
             //-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -188,7 +191,7 @@ while (running)
         System.Console.WriteLine("5. Show Listed Items");
         System.Console.WriteLine("6. Logout");
         System.Console.WriteLine("7. Exit");
-        System.Console.Write("Please enter an option(1-4): ");
+        System.Console.Write("Please enter an option(1-7): ");
         string? input = Console.ReadLine();
         System.Console.WriteLine();
 
@@ -196,39 +199,50 @@ while (running)
         {
             case "1":
                 activeUser.UserInfo();
+                System.Console.Write("(Press enter to go back.)");
                 Console.ReadLine();
                 break;
+
+            case "2":
+
+                break;
+            // switch case for showing all items currently listed with name, description and owner.
             case "5":
+                // a fake loading bar added just for fun
                 string[] loading = ["[          ]0%", "[=         ]10%", "[==        ]20%", "[===       ]30%", "[====      ]40%",
-                    "[=====     ]50%", "[======    ]60%", "[=======   ]70%", "[========  ]80%", "[========= ]90%", "[==========]100%"];
+                "[=====     ]50%", "[======    ]60%", "[=======   ]70%", "[========  ]80%", "[========= ]90%", "[==========]100%"];
                 foreach (string tick in loading)
                 {
                     Console.Clear();
-                    System.Console.WriteLine(tick);
-                    Thread.Sleep(500);
+                    System.Console.WriteLine("Loading - "+tick);
+                    // Thread.Sleep pauses the program for a set amount of time, in this case 200 miliseconds to help fake the loading bar
+                    // Thread.Sleep was not something we convered in lectures, usage of Sleep.Thread was allowed by Max Ekstedt.
+                    Thread.Sleep(200);
                 }
                 Console.Clear();
                 for (int i = 1; i < importUsers.Length; i++)
                 {
                     foreach (Item item in item_by_owner[i])
                     {
-                        System.Console.WriteLine($"Item: {item.Name}");
-                        System.Console.WriteLine($" Description: {item.Desc}");
-                        System.Console.WriteLine($" Owner: {users[i].Name}");
-                        System.Console.WriteLine();
+                        item.ItemInfo();
                     }
                 }
                 System.Console.Write("(Press enter to go back.)");
                 Console.ReadLine();
                 break;
+            
+            // switch case sets activeUser to null effectively logging out the current user and moves them back to the login interface
             case "6":
                 activeUser = null;
                 break;
+
+            // switch case sets running to false and therefor causes the encapsulating while loop to stop and the program as a whole.
             case "7":
                 running = false;
                 break;
+           
+            // If input doesn't fit any of the set cases it will print out "Invalid!".
             default:
-                Console.Clear();
                 System.Console.WriteLine("Invalid!");
                 Console.ReadLine();
                 break;

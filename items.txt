@@ -3,4 +3,4 @@ T-shirt : T-shirt with a jigsaw pattern : 1
 Video Game : An old SNES cartridge : 2
 Lamp : Table lamp, cable missing : 2
 Gloves : Gardener gloves, bit dirty but still usable : 3
-Sunglasses : Aviator shades, one of the lenses has a small scratch otherwise brand new : 3
+Sunglasses : Aviator shades, left lens has a small scratch : 3

@@ -36,6 +36,9 @@ public class User
     // Admins will be able to print our the info of all users
     public void UserInfo()
     {
-        Console.WriteLine($"User: {Name}, Email: {Email}, UserID: {ID}, Password: {Pwd}");
+        Console.WriteLine($"User: {Name}\n"+
+                            $" Email: {Email}\n"+ 
+                            $" UserID: {ID}\n"+
+                            $" Password: {Pwd}\n");
     }
 }

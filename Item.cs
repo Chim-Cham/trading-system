@@ -1,5 +1,6 @@
 namespace Apps;
 
+// Class used for item creation containing Item name, description and who owns it via owner ID.
 public class Item
 {
     // Item Name
@@ -20,9 +21,10 @@ public class Item
     // Method that prints out all info related to an item.
     public void ItemInfo()
     {
-        Console.WriteLine($"Item: {Name}");
-        System.Console.WriteLine($" Description: {Desc}");
-        System.Console.WriteLine($" OwnerID: {OwnerID}");
-        System.Console.ReadLine();
+        Console.WriteLine($"Item: {Name}\n" +
+                            $"------------------------------------------------------------------------\n" +
+                            $" Description: {Desc}\n" +
+                            $" OwnerID: {OwnerID}\n" +
+                            $"------------------------------------------------------------------------\n");
     }
 }
