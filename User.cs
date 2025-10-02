@@ -12,7 +12,7 @@ public class User
     // User Email
     public string? Email;
     //UserID
-    public int? ID;
+    public int ID;
     //User Password
     public string? Pwd;
 

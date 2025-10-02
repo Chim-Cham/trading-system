@@ -6,7 +6,6 @@ using Apps;
 // Item holds all info for each item stored such as Name, Description and OwnerID.
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 List<User> users = new List<User>();
-List<Item> items = new List<Item>();
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // The below code snippet is used to import all user info from a txt file. ReadALLLines goes through the textfile and stores each lines read in a 
@@ -14,6 +13,12 @@ List<Item> items = new List<Item>();
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 string[] importUsers = File.ReadAllLines("users.txt");
 string[] importItems = File.ReadAllLines("items.txt");
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Dictionary used to match items to their owners during item listings, the function takes the UserID as the int input and in return gives any 
+// item who's OwnerID matches
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+Dictionary<int, List<Item>> item_by_owner = new Dictionary<int, List<Item>>();
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // The below loop goes through the importedUsers array and uses .Split to make the string into an array that then is used to take out the necessary 
@@ -43,6 +48,15 @@ for (int i = 0; i < importUsers.Length; i++)
 }
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+// foreach loop that goes through the users list and adds a Item list in the dictionary made earlier for each user. Allowing items to be added to 
+// seperate lists that ties them to their owner using user.ID.
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+foreach (User user in users)
+{
+    item_by_owner.Add(user.ID, new List<Item>());
+}
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
 // Following loop does the same as above but for Items.
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 // The different index in values translates to the following:
@@ -53,7 +67,7 @@ for (int i = 0; i < importUsers.Length; i++)
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 // Item info is stored in the following format "Name : Description : ItemID : OwnerID".
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-for(int i = 0; i < importItems.Length; i++)
+for (int i = 0; i < importItems.Length; i++)
 {
     if (importItems[i] == null)
     {
@@ -63,7 +77,7 @@ for(int i = 0; i < importItems.Length; i++)
     {
         string[] values = importItems[i].Split(" : ");
         int.TryParse(values[2], out int OID);
-        items.Add(new Item(values[0], values[1], OID));
+        item_by_owner[OID].Add(new Item(values[0], values[1], OID));
     }
 }
 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,8 +97,9 @@ while (running)
     Console.Clear();
 
     // Login part, program sees that a user is not logged in because activeUser is null and therefor prompts the user to input login credentials.
+    //---------------------------------------------------------------------------------------------------------------------------------------------
     if (activeUser == null)
-    {   
+    {
         // User interface for logging in and registering as new user.
         System.Console.WriteLine("----------------------------");
         System.Console.WriteLine($" Welcome!");
@@ -92,6 +107,7 @@ while (running)
         System.Console.WriteLine("1. Register");
         System.Console.WriteLine("2. Login");
         System.Console.WriteLine("3. Exit");
+        System.Console.Write("Please enter an option(1-3): ");
         string? input = Console.ReadLine();
 
         switch (input)
@@ -100,19 +116,24 @@ while (running)
                 // Account registration logic, user inputs a username and password which then get added to users.txt and List<User> so a restart 
                 // is not needed to make the registration take effect. The username is also converted to a hotmail adress that is automatically 
                 // made upon registraion.
+                //---------------------------------------------------------------------------------------------------------------------------------
                 System.Console.Write("Enter Username: ");
                 string? userInput = System.Console.ReadLine();
                 System.Console.Write("Enter Password: ");
                 string? passInput = System.Console.ReadLine();
                 string emailInput = $"{userInput}@hotmail.com";
-                users.Add(new User(userInput, emailInput, users.Capacity+1, passInput));
-                // string value that is appended to users.txt. "\n" is added to make sure that the user info is added onto it's own row. Also reason
-                // for users.Count having a subract added onto it is because count gives the total number of entires in List<User> so it starts from 1 
-                // and not 0 and since the admin login info has the userID of 0 it would skip a number. Could add logic here that goes through List<User>
-                // and looks for the lowest available number and assigns a number that way instead. Will do if i remember and have time.
-                string inputCompile = $"\n{userInput} : {emailInput} : {users.Count-1} : {passInput}";
+                users.Add(new User(userInput, emailInput, users.Capacity + 1, passInput));
+                // string value that is appended to users.txt. "\n" is added to make sure that the user info is added onto it's own row. Also 
+                // reason for users.Count having a subract added onto it is because count gives the total number of entires in List<User> so 
+                // it starts from 1 and not 0 and since the admin login info has the userID of 0 it would skip a number. Could add logic here 
+                // that goes through List<User> and looks for the lowest available number and assigns a number that way instead. Will do if i 
+                // remember and have time.
+                //---------------------------------------------------------------------------------------------------------------------------------
+                string inputCompile = $"\n{userInput} : {emailInput} : {users.Count - 1} : {passInput}";
+                //---------------------------------------------------------------------------------------------------------------------------------
                 File.AppendAllText("users.txt", inputCompile);
                 break;
+            //-------------------------------------------------------------------------------------------------------------------------------------
 
             case "2":
                 // foreach loop that goes through List<User> to try and find Username and Password combo that fits with the user input, if 
@@ -120,6 +141,7 @@ while (running)
                 // combo only the user that shows up first in the list would be able to login. Some logic that is able to detect already 
                 // exisitng usernames and prompt the user to pick a unique one while registering could be used here but since it was not 
                 // listed in the assignment requirements i decided to skip it to save time.        
+                //---------------------------------------------------------------------------------------------------------------------------------
                 System.Console.Write("Enter Username: ");
                 userInput = System.Console.ReadLine();
                 System.Console.Write("Enter Password: ");
@@ -133,6 +155,7 @@ while (running)
                     }
                 }
                 break;
+            //-------------------------------------------------------------------------------------------------------------------------------------
 
             case "3":
                 // switch case sets running to false and therefor causes the encapsulating while loop to stop and the program as a whole.
@@ -144,12 +167,14 @@ while (running)
                 System.Console.WriteLine("Invalid!");
                 break;
         }
-        
+
         Console.Clear();
     }
+    //---------------------------------------------------------------------------------------------------------------------------------------------
 
     // Once logged in the remaining code is the actual interactive part that users will navigate to list items, trade and register articles 
     // they want to use for said trading.
+    //---------------------------------------------------------------------------------------------------------------------------------------------
     else
     {
         // User interface that displays once logged in.
@@ -157,9 +182,15 @@ while (running)
         System.Console.WriteLine($" Welcome {activeUser.Name}");
         System.Console.WriteLine("----------------------------");
         System.Console.WriteLine("1. User Info");
-        System.Console.WriteLine("2. Logout");
-        System.Console.WriteLine("3. Exit");
+        System.Console.WriteLine("2. Add Item");
+        System.Console.WriteLine("3. Trade Item(s)");
+        System.Console.WriteLine("4. Show Trades");
+        System.Console.WriteLine("5. Show Listed Items");
+        System.Console.WriteLine("6. Logout");
+        System.Console.WriteLine("7. Exit");
+        System.Console.Write("Please enter an option(1-4): ");
         string? input = Console.ReadLine();
+        System.Console.WriteLine();
 
         switch (input)
         {
@@ -167,16 +198,43 @@ while (running)
                 activeUser.UserInfo();
                 Console.ReadLine();
                 break;
-            case "2":
+            case "5":
+                string[] loading = ["[          ]0%", "[=         ]10%", "[==        ]20%", "[===       ]30%", "[====      ]40%",
+                    "[=====     ]50%", "[======    ]60%", "[=======   ]70%", "[========  ]80%", "[========= ]90%", "[==========]100%"];
+                foreach (string tick in loading)
+                {
+                    Console.Clear();
+                    System.Console.WriteLine(tick);
+                    Thread.Sleep(500);
+                }
+                Console.Clear();
+                for (int i = 1; i < importUsers.Length; i++)
+                {
+                    foreach (Item item in item_by_owner[i])
+                    {
+                        System.Console.WriteLine($"Item: {item.Name}");
+                        System.Console.WriteLine($" Description: {item.Desc}");
+                        System.Console.WriteLine($" Owner: {users[i].Name}");
+                        System.Console.WriteLine();
+                    }
+                }
+                System.Console.Write("(Press enter to go back.)");
+                Console.ReadLine();
+                break;
+            case "6":
                 activeUser = null;
                 break;
-            case "3":
+            case "7":
                 running = false;
                 break;
             default:
+                Console.Clear();
                 System.Console.WriteLine("Invalid!");
+                Console.ReadLine();
                 break;
         }
     }
+    //---------------------------------------------------------------------------------------------------------------------------------------------
+
 }
 // ------------------------------------------------------------------------------------------------------------------------------------------------
