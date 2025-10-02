@@ -11,7 +11,7 @@ public class Item
     public int OwnerID;
 
     // Method for creating new Item
-    public Item(string name, string desc, int ownerid)
+    public Item(string? name, string? desc, int ownerid)
     {
         Name = name;
         Desc = desc;

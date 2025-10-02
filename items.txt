@@ -4,3 +4,7 @@ Video Game : An old SNES cartridge : 2
 Lamp : Table lamp, cable missing : 2
 Gloves : Gardener gloves, bit dirty but still usable : 3
 Sunglasses : Aviator shades, left lens has a small scratch : 3
+Boots : Torn Leather Boots : 1
+Gameboy : Old Gameboy, comes with Pokemon Red : 1
+Printer : Old printer, scanner broken : 6
+Cane : Wooden cane, good condition : 6
