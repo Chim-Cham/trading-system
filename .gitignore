@@ -1,0 +1,3 @@
+# Exclude directory /obj and /bin
+!/obj
+!/bin
