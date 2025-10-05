@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
 using Apps;
 
 // Lists that hold the information that will be used for different parts of the program.
@@ -8,13 +9,17 @@ using Apps;
 List<User> users = new List<User>();
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+List<Trade> trades = new List<Trade>();
+
 // The below code snippet is used to import all user info from a txt file. ReadALLLines goes through the textfile and stores each lines read in a 
 // string array that later on gets converted to list items stored in List<User>.
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 string usersFile = "users.txt";
 string itemsFile = "items.txt";
+string tradesFile = "trades.txt";
 string[] importUsers = File.ReadAllLines(usersFile);
 string[] importItems = File.ReadAllLines(itemsFile);
+string[] importTrades = File.ReadAllLines(tradesFile);
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Dictionary used to match items to their owners during item listings, the function takes the UserID as the int input and in return gives any 
@@ -84,6 +89,27 @@ for (int i = 0; i < importItems.Length; i++)
     }
 }
 // ------------------------------------------------------------------------------------------------------------------------------------------------
+
+for (int i = 0; i < importTrades.Length; i++)
+{
+    if (importTrades[i] == null)
+    {
+        break;
+    }
+    else
+    {
+        string[] request = importTrades[i].Split(" > ");
+        string[] sender = request[0].Split(" | ");
+        string[] reciever = request[1].Split(" | ");
+        string[] itemArraySender = sender[1].Split(" : ");
+        string[] itemArrayReciever = reciever[1].Split(" : ");
+        int.TryParse(itemArrayReciever[2], out int OID);
+        Item itemSenderHandler = new Item(itemArrayReciever[0],itemArrayReciever[1], OID);
+        int.TryParse(itemArraySender[2], out OID);
+        Item itemRecieverHandler = new Item(itemArraySender[0],itemArraySender[1], OID);
+        trades.Add(new Trade(sender[0], reciever[0], itemSenderHandler, itemRecieverHandler));
+    }
+}
 
 // Parameters used during majority of the program to determine what user is logged in via activeUser and to control when the program exits via 
 // running that controls the while loop that encompasses the majority of the programs code.
@@ -211,6 +237,35 @@ while (running)
                 item_by_owner[activeUser.ID].Add(new Item(nameInput, descInput, activeUser.ID));
                 File.AppendAllText(itemsFile, $"\n{nameInput} : {descInput} : {activeUser.ID} : None");
                 break;
+
+            case "3":
+
+                break;
+
+            case "4":
+                if (activeUser.Name == "Admin")
+                {
+                    foreach (Trade trade in trades)
+                    {
+                            trade.GetRequest(trade);
+                    }
+                }
+                else
+                {
+                    foreach (Trade trade in trades)
+                    {
+                        if (trade.Reciever == activeUser.Name)
+                        {
+                            if (trade.Status == Status.Pending)
+                            {
+                                trade.GetRequest(trade);
+                            }
+                        }
+                    }
+                }
+                Console.ReadLine();
+                break;
+
             // switch case for showing all items currently listed with name, description and owner.
             case "5":
                 // a fake loading bar added just for fun
