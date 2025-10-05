@@ -209,7 +209,7 @@ while (running)
                 System.Console.Write("Write Description: ");
                 string? descInput = Console.ReadLine();
                 item_by_owner[activeUser.ID].Add(new Item(nameInput, descInput, activeUser.ID));
-                File.AppendAllText(itemsFile, $"\n{nameInput} : {descInput} : {activeUser.ID}");
+                File.AppendAllText(itemsFile, $"\n{nameInput} : {descInput} : {activeUser.ID} : None");
                 break;
             // switch case for showing all items currently listed with name, description and owner.
             case "5":

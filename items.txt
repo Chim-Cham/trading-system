@@ -1,10 +1,12 @@
-Shoes : Pair of older shoes, still in good condition : 1
-T-shirt : T-shirt with a jigsaw pattern : 1
-Video Game : An old SNES cartridge : 2
-Lamp : Table lamp, cable missing : 2
-Gloves : Gardener gloves, bit dirty but still usable : 3
-Sunglasses : Aviator shades, left lens has a small scratch : 3
-Boots : Torn Leather Boots : 1
-Gameboy : Old Gameboy, comes with Pokemon Red : 1
-Printer : Old printer, scanner broken : 6
-Cane : Wooden cane, good condition : 6
+Shoes : Pair of older shoes, still in good condition : 1 : None
+T-shirt : T-shirt with a jigsaw pattern : 1 : None
+Video Game : An old SNES cartridge : 2 : None
+Lamp : Table lamp, cable missing : 2 : None
+Gloves : Gardener gloves, bit dirty but still usable : 3 : None
+Sunglasses : Aviator shades, left lens has a small scratch : 3 : None
+Boots : Torn Leather Boots : 1 : None
+Gameboy : Old Gameboy, comes with Pokemon Red : 1 : None
+Printer : Old printer, scanner broken : 6 : None
+Cane : Wooden cane, good condition : 6 : None
+Hat : Bowler Hat : 6 : None
+Hairdryer : Pink Hairdryer : 5 : None

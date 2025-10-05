@@ -6,3 +6,4 @@ Hans : hans@hotmail.com : 4 : 3939
 Kajsa : kajsa@hotmail.com : 5 : 1211
 Kaj : kaj@hotmail.com : 6 : 1001
 Eva : Eva@hotmail.com : 7 : 1231
+Marie : Marie@hotmail.com : 8 : 1966
