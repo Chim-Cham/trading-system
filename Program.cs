@@ -17,9 +17,11 @@ List<Trade> trades = new List<Trade>();
 string usersFile = "users.txt";
 string itemsFile = "items.txt";
 string tradesFile = "trades.txt";
+string tradesDoneFile = "trades_done.txt";
 string[] importUsers = File.ReadAllLines(usersFile);
 string[] importItems = File.ReadAllLines(itemsFile);
 string[] importTrades = File.ReadAllLines(tradesFile);
+string[] importTradesDone = File.ReadAllLines(tradesDoneFile);
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Dictionary used to match items to their owners during item listings, the function takes the UserID as the int input and in return gives any 
@@ -90,6 +92,10 @@ for (int i = 0; i < importItems.Length; i++)
 }
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Following loop does the same as above but for Trades.
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+// Trades info is stored in the following format "(Pending) > Active User Name | Item Name : Item Description : Owner ID > User Name | Item Name : Item Description : Owner ID".
+// ------------------------------------------------------------------------------------------------------------------------------------------------
 for (int i = 0; i < importTrades.Length; i++)
 {
     if (importTrades[i] == null)
@@ -99,15 +105,15 @@ for (int i = 0; i < importTrades.Length; i++)
     else
     {
         string[] request = importTrades[i].Split(" > ");
-        string[] sender = request[0].Split(" | ");
-        string[] reciever = request[1].Split(" | ");
+        string[] sender = request[1].Split(" | ");
+        string[] reciever = request[2].Split(" | ");
         string[] itemArraySender = sender[1].Split(" : ");
         string[] itemArrayReciever = reciever[1].Split(" : ");
         int.TryParse(itemArrayReciever[2], out int OID);
-        Item itemSenderHandler = new Item(itemArrayReciever[0],itemArrayReciever[1], OID);
+        Item itemSenderHandler = new Item(itemArrayReciever[0], itemArrayReciever[1], OID);
         int.TryParse(itemArraySender[2], out OID);
-        Item itemRecieverHandler = new Item(itemArraySender[0],itemArraySender[1], OID);
-        trades.Add(new Trade(sender[0], reciever[0], itemSenderHandler, itemRecieverHandler));
+        Item itemRecieverHandler = new Item(itemArraySender[0], itemArraySender[1], OID);
+        trades.Add(new Trade(sender[0], reciever[0], itemSenderHandler, itemRecieverHandler, request[0]));
     }
 }
 
@@ -215,9 +221,10 @@ while (running)
         System.Console.WriteLine("3. Trade Item(s)");
         System.Console.WriteLine("4. Show Trades");
         System.Console.WriteLine("5. Show Listed Items");
-        System.Console.WriteLine("6. Logout");
-        System.Console.WriteLine("7. Exit");
-        System.Console.Write("Please enter an option(1-7): ");
+        System.Console.WriteLine("6. Show Complete Trades");
+        System.Console.WriteLine("7. Logout");
+        System.Console.WriteLine("8. Exit");
+        System.Console.Write("Please enter an option(1-8): ");
         string? input = Console.ReadLine();
         System.Console.WriteLine();
 
@@ -238,10 +245,67 @@ while (running)
                 File.AppendAllText(itemsFile, $"\n{nameInput} : {descInput} : {activeUser.ID} : None");
                 break;
 
+            // Switch case for creating trades, will take user input for what user and item they want to request and then select what item
+            // in their ownership they want to offer.
+            // After the trade is made it get's added to the trades.txt file and the trades item list
             case "3":
-
+                foreach (User user in users)
+                {
+                    System.Console.WriteLine($"{user.ID}: {user.Name}");
+                }
+                System.Console.Write("Who do you wanna trade with?(Select with number): ");
+                string? inputUserSelect = Console.ReadLine();
+                int.TryParse(inputUserSelect, out int UID);
+                int itemNumber = 1;
+                foreach (Item item in item_by_owner[UID])
+                {
+                    if (item.Status == Status.InTrade)
+                    {
+                        itemNumber = itemNumber + 1;
+                    }
+                    else
+                    {
+                        System.Console.WriteLine(itemNumber);
+                        item.ItemInfo();
+                        itemNumber = itemNumber + 1;
+                    }
+                }
+                System.Console.Write("What item do you want to request?(Select with number): ");
+                string? inputItemRequest = Console.ReadLine();
+                int.TryParse(inputItemRequest, out int RID);
+                RID = RID - 1;
+                itemNumber = 1;
+                foreach (Item item in item_by_owner[activeUser.ID])
+                {
+                    if (item.Status == Status.InTrade)
+                    {
+                        itemNumber = itemNumber + 1;
+                    }
+                    else
+                    {
+                        System.Console.WriteLine(itemNumber);
+                        item.ItemInfo();
+                        itemNumber = itemNumber + 1;
+                    }
+                }
+                System.Console.Write("What item do you want to offer?(Select by number): ");
+                string? inputItemOffer = Console.ReadLine();
+                int.TryParse(inputItemOffer, out int IID);
+                IID = IID - 1;
+                // In hindsight i realize i should have skipped doing the save to file part of the code to to the time consumption and the lack o f time i ended up having
+                // to work on this due outside factors.
+                string inputCompile = $"\n(Pending) > {activeUser.Name} | "+
+                $"{item_by_owner[activeUser.ID][IID].Name} : {item_by_owner[activeUser.ID][IID].Desc} : {item_by_owner[activeUser.ID][IID].OwnerID} > "+
+                $"{users[UID].Name} | { item_by_owner[UID][RID].Name} : {item_by_owner[UID][RID].Desc} : {item_by_owner[UID][RID].OwnerID}";
+                File.AppendAllText(tradesFile, inputCompile);
+                Item itemSenderHandler = new Item(item_by_owner[activeUser.ID][IID].Name, item_by_owner[activeUser.ID][IID].Desc, item_by_owner[activeUser.ID][IID].OwnerID);
+                Item itemRecieverHandler = new Item(item_by_owner[UID][RID].Name, item_by_owner[UID][RID].Desc, item_by_owner[UID][RID].OwnerID);
+                trades.Add(new Trade(activeUser.Name, users[UID].Name, itemSenderHandler, itemRecieverHandler, "Pending"));
+                item_by_owner[activeUser.ID][IID].Status = Status.InTrade;
+                item_by_owner[UID][RID].Status = Status.InTrade;
                 break;
 
+            // Switch case to write out all active trades tied to the active user, if the active user is admin all items are listed.
             case "4":
                 if (activeUser.Name == "Admin")
                 {
@@ -291,13 +355,46 @@ while (running)
                 Console.ReadLine();
                 break;
             
-            // switch case sets activeUser to null effectively logging out the current user and moves them back to the login interface
             case "6":
+                foreach (Trade trade in trades)
+                {
+                    if (trade.Status == Status.Accepted || trade.Status == Status.Declined)
+                    {
+                        trade.GetComplete(trade);
+                    }
+                }
+                break;
+
+            // switch case sets activeUser to null effectively logging out the current user and moves them back to the login interface
+            // The commented out code was a WIP in progress to update the item file mainly to refill it with the items with their updated
+            // Statuses if they have any.
+            case "7":
+
+                /* Item writeItems = new Item(item_by_owner[0][0].Name, item_by_owner[0][0].Desc, item_by_owner[0][0].OwnerID);
+                writeItems.Status = item_by_owner[0][0].Status;
+                File.WriteAllText(tradesFile, $"{writeItems.Name} : {writeItems.Desc} : {writeItems.OwnerID} : {writeItems.Status}");
+                for (int i = 1; i < importItems.Length; i++)
+                {
+                    writeItems = new Item(item_by_owner[0][0].Name, item_by_owner[0][0].Desc, item_by_owner[0][0].OwnerID);
+                    File.AppendAllText(tradesFile, $"\n{writeItems.Name} : {writeItems.Desc} : {writeItems.OwnerID} : {writeItems.Status}");
+                } */
                 activeUser = null;
                 break;
 
             // switch case sets running to false and therefor causes the encapsulating while loop to stop and the program as a whole.
-            case "7":
+            case "8":
+                /* writeTrades = importTrades;
+                writeItems = importItems;
+                File.WriteAllText(tradesFile, writeTrades[0]);
+                for (int i = 1; i < importTrades.Length; i++)
+                {
+                    File.AppendAllText(tradesFile, $"\n"+writeTrades[i]);
+                }
+                File.WriteAllText(itemsFile, writeItems[0]);
+                for (int i = 1; i < importItems.Length; i++)
+                {
+                    File.AppendAllText(itemsFile, $"\n"+writeItems[i]);
+                } */
                 running = false;
                 break;
            

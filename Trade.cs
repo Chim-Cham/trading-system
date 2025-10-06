@@ -12,18 +12,30 @@ public class Trade : TradeStatus
     public Item Items;
     public Status Status;
 
-    public Trade(string sender, string reciever, Item request, Item items)
+    public Trade(string sender, string reciever, Item request, Item items, string status)
     {
         Sender = sender;
         Reciever = reciever;
         Request = request;
         Items = items;
-        Status = Status.Pending;
+        switch (status)
+        {
+            case "Pending":
+                Status = Status.Pending;
+                break;
+            case "Declined":
+                Status = Status.Pending;
+                break;
+            case "Accepted":
+                Status = Status.Pending;
+                break;
+        }
         System.Console.WriteLine("Trade sumbited!");
     }
 
     public void GetRequest(Trade trade)
     {
+        System.Console.WriteLine("----------------------------------------------------");
         Console.WriteLine($"Sender: {trade.Sender}");
         System.Console.WriteLine("----------------------------------------------------");
         System.Console.WriteLine($"Item: {trade.Request.Name}\n" +
