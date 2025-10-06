@@ -4,6 +4,7 @@ Program is not finished. Part missing are:
 - A user needs to be able to accept a trade request.
 - A user needs to be able to deny a trade request.
 - A user needs to be able to browse completed requests.
+
 Not finished due to hinderance and unforseen distraction that gave me less time to work in this than i thought i would have.
 Some code comments are also missing due for this reason. I hope there still enough to help understand what i have written
 and why i went with the approached i did.
